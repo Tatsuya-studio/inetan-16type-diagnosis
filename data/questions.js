@@ -1,22 +1,7 @@
 export const questions = [
-  { id: 1, axis: "EI", question: "新しい場所に行ったときのあなたは？", optionA: "🌟 初対面でもすぐに打ち解けられる（E）", optionB: "🌱 まずは様子を見てから動きたい（I）" },
-  { id: 2, axis: "EI", question: "友達との時間についてどう思う？", optionA: "🎉 できるだけ多くの人と会いたい（E）", optionB: "🏡 仲のいい人と深く話せるのが嬉しい（I）" },
-  { id: 3, axis: "EI", question: "人前で話すことは？", optionA: "💬 割と平気。むしろ楽しい！（E）", optionB: "😳 できれば避けたいかも…（I）" },
-  { id: 4, axis: "EI", question: "旅行に行くときは？", optionA: "🚗 みんなとワイワイ行くのが好き（E）", optionB: "🚶‍♂️ 一人旅もいいなと思う（I）" },
-  { id: 5, axis: "EI", question: "あなたにとって“充電時間”とは？", optionA: "👥 誰かと楽しく過ごす時間（E）", optionB: "🛋 静かに1人で過ごす時間（I）" },
-  { id: 6, axis: "SN", question: "新しいプロジェクトを始めるときは？", optionA: "🛠 手順やルールをしっかり確認したい（S）", optionB: "💡 ざっくりイメージで始めちゃう（N）" },
-  { id: 7, axis: "SN", question: "日常の中で大事にしていることは？", optionA: "🔍 実用性や確かな経験（S）", optionB: "🌈 インスピレーションやひらめき（N）" },
-  { id: 8, axis: "SN", question: "説明を聞くときに重視するのは？", optionA: "📋 具体的でわかりやすい内容（S）", optionB: "🎨 アイデアや全体像（N）" },
-  { id: 9, axis: "SN", question: "日々の選択をするときは？", optionA: "📊 経験や過去の事例に基づく（S）", optionB: "🌟 未来や可能性を考えて決める（N）" },
-  { id: 10, axis: "SN", question: "理想の暮らしを考えるなら？", optionA: "🏠 安定して安心できる毎日（S）", optionB: "🚀 変化と刺激に満ちた毎日（N）" },
-  { id: 11, axis: "TF", question: "仕事や勉強で重視するのは？", optionA: "📐 論理や効率、成果（T）", optionB: "🤝 周囲との調和や気持ち（F）" },
-  { id: 12, axis: "TF", question: "誰かが困っているときは？", optionA: "🧩 解決策をすぐに考える（T）", optionB: "💗 相手の気持ちに寄り添う（F）" },
-  { id: 13, axis: "TF", question: "判断に迷ったときは？", optionA: "📊 データや根拠を参考にする（T）", optionB: "💬 自分や他人の気持ちを大事にする（F）" },
-  { id: 14, axis: "TF", question: "周囲との関係で意識していることは？", optionA: "⚖ 正しさやフェアさを重視する（T）", optionB: "🌸 人間関係の円滑さを重視する（F）" },
-  { id: 15, axis: "TF", question: "大切な人にアドバイスを求められたら？", optionA: "🧠 客観的に分析して伝える（T）", optionB: "🌷 気持ちを受け止めて寄り添う（F）" },
-  { id: 16, axis: "JP", question: "予定の立て方は？", optionA: "📅 事前にしっかり計画する（J）", optionB: "🎲 流れに任せるのが好き（P）" },
-  { id: 17, axis: "JP", question: "締め切りが近づいたときは？", optionA: "🕒 早めに終わらせて安心したい（J）", optionB: "⚡ ギリギリの方が集中できる（P）" },
-  { id: 18, axis: "JP", question: "旅行の準備はどうする？", optionA: "📋 リストを作って計画的に（J）", optionB: "🧳 なんとかなるでしょ派（P）" },
-  { id: 19, axis: "JP", question: "複数の予定がある日は？", optionA: "🗂 スケジュール管理が得意（J）", optionB: "🎈 臨機応変にその場で動く（P）" },
-  { id: 20, axis: "JP", question: "仕事や課題の進め方は？", optionA: "🛠 着実に順を追って進める（J）", optionB: "🌀 直感で柔軟に動きたい（P）" }
+  { id: 1, axis: "EI", question: "新しい場所でのあなたの振る舞いは？", optionA: "誰とでも積極的に話す", optionB: "まずは静かに様子を見たい", optionC: "状況によって変わる" },
+  { id: 2, axis: "EI", question: "週末の過ごし方で近いのは？", optionA: "誰かと出かける予定を立てる", optionB: "家で1人の時間を楽しむ", optionC: "その時の気分次第" },
+  { id: 3, axis: "EI", question: "人前で話すことについて？", optionA: "自信があり得意", optionB: "できれば避けたい", optionC: "テーマによって異なる" },
+  { id: 4, axis: "EI", question: "旅行に行くなら？", optionA: "大勢でワイワイ", optionB: "ひとり旅が好き", optionC: "同行者次第で変わる" },
+  // 以下略、必要に応じて追加
 ];

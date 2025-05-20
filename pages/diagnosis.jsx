@@ -50,7 +50,6 @@ export default function Diagnosis() {
       if (q.axis && answer) {
         if (answer === "A") axisCount[q.axis]++;
         if (answer === "B") axisCount[q.axis]--;
-        // "C"は中立としてカウントしない
       }
     });
     return (
@@ -63,14 +62,15 @@ export default function Diagnosis() {
 
   const startIndex = page * QUESTIONS_PER_PAGE;
   const currentQuestions = questions.slice(startIndex, startIndex + QUESTIONS_PER_PAGE);
-  const progress = Math.round(((startIndex + 1) / questions.length) * 100);
+  const progress = Math.round((startIndex / questions.length) * 100);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white text-gray-800">
       <div className="w-full max-w-2xl">
         <div className="mb-6">
-          <div className="text-sm text-gray-500 mb-2">
-            質問 {startIndex + 1}〜{Math.min(startIndex + QUESTIONS_PER_PAGE, questions.length)} / {questions.length}
+          <div className="flex justify-between mb-2 text-sm text-gray-500">
+            <span>進捗 {progress}%</span>
+            <span>{startIndex + 1} / {questions.length} 問</span>
           </div>
           <div className="w-full h-2 bg-gray-200 rounded-full">
             <div
@@ -82,21 +82,26 @@ export default function Diagnosis() {
 
         {currentQuestions.map((q, idx) => (
           <div key={q.id} className="mb-6 p-4 bg-gray-50 rounded-xl shadow-sm">
+            <p className="text-sm text-gray-500 mb-1">Q{startIndex + idx + 1}</p>
             <p className="font-semibold mb-3">{q.question}</p>
             <div className="flex flex-col gap-2">
-              {["A", "B", "C"].map((opt) => (
-                <button
-                  key={opt}
-                  onClick={() => handleAnswer(idx, opt)}
-                  className={`
-                    py-2 px-4 rounded-lg border
-                    ${answers[startIndex + idx] === opt ? "bg-green-100 border-green-500" : "bg-white border-gray-300"}
-                    hover:bg-green-50 transition
-                  `}
-                >
-                  {q[`option${opt}`]}
-                </button>
-              ))}
+              {["A", "B", "C"].map((opt) => {
+                const isSelected = answers[startIndex + idx] === opt;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => handleAnswer(idx, opt)}
+                    className={\`
+                      py-2 px-4 rounded-lg border text-left transition
+                      \${isSelected ? "bg-green-100 border-green-500 font-bold" : "bg-white border-gray-300"}
+                      hover:bg-green-50
+                    \`}
+                  >
+                    {isSelected && <span className="mr-2">✅</span>}
+                    {q["option" + opt]}
+                  </button>
+                );
+              })}
             </div>
           </div>
         ))}
