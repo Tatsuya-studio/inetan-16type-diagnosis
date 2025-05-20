@@ -124,4 +124,8 @@ export default function Diagnosis() {
       次へ
     </button>
   )}
-</div>
+        </div>
+      </div>
+    </div>
+  );
+}
