@@ -104,7 +104,7 @@ export default function Diagnosis() {
           </div>
         ))}
 
-        <<div className="flex justify-end mt-6">
+        <div className="flex justify-end mt-6">
   {startIndex + QUESTIONS_PER_PAGE >= questions.length ? (
     <button
       onClick={() => {
