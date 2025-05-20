@@ -16,7 +16,13 @@ export default function Diagnosis() {
   };
 
   const handleNext = () => {
-    setPage(page + 1);
+    if ((page + 1) * QUESTIONS_PER_PAGE >= questions.length) {
+      const type = calculateType(answers);
+      const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
+      router.push(resultUrl);
+    } else {
+      setPage(page + 1);
+    }
   };
 
   const calculateType = (answers) => {
@@ -39,39 +45,36 @@ export default function Diagnosis() {
   const startIndex = page * QUESTIONS_PER_PAGE;
   const currentQuestions = questions.slice(startIndex, startIndex + QUESTIONS_PER_PAGE);
   const progress = Math.round((startIndex / questions.length) * 100);
-  const isLastPage = startIndex + QUESTIONS_PER_PAGE >= questions.length;
 
   return (
-    <div className="min-h-screen bg-white text-[#444] font-sans flex flex-col items-center justify-center px-2 py-4">
-      <div className="w-full max-w-3xl text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#fffaf3] to-[#fcefe4] text-gray-800 font-sans">
+      <div className="w-full max-w-xl">
         <div className="mb-6">
-          <div className="mb-1 text-lg text-gray-500">進捗 {progress}%</div>
-          <div className="mb-2 text-lg text-gray-500">{page + 1} / {Math.ceil(questions.length / QUESTIONS_PER_PAGE)} ページ</div>
-          <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div className="text-sm text-gray-500 mb-2">
+            <div className="mb-1">進捗 {progress}%</div>
+            <div>{startIndex + 1} / {questions.length} 問</div>
+          </div>
+          <div className="w-full h-3 bg-gray-200 rounded-full">
             <div
-              className="h-4 bg-green-500 transition-all duration-500 ease-in-out"
+              className="h-3 bg-[#f4a261] rounded-full transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
         {currentQuestions.map((q, idx) => (
-          <div key={q.id} className="mb-6 p-6 bg-gray-50 rounded-xl shadow-md">
-            <p className="text-xl text-green-600 font-bold mb-2">
-              🐾 Q{startIndex + idx + 1}
-            </p>
-            <p className="font-bold text-2xl mb-6">{q.question}</p>
-            <div className="flex flex-col items-center gap-6">
+          <div key={q.id} className="mb-8 px-6 py-6 bg-white rounded-2xl shadow-md">
+            <div className="text-2xl mb-2">🐾 Q{startIndex + idx + 1}</div>
+            <p className="text-xl font-semibold mb-4">{q.question}</p>
+            <div className="flex flex-col items-center gap-4">
               {["A", "B", "C"].map((opt) => {
                 const isSelected = answers[startIndex + idx] === opt;
                 return (
                   <button
                     key={opt}
                     onClick={() => handleAnswer(idx, opt)}
-                    className={`text-[40px] py-6 px-10 rounded-full border-4 transition-all duration-200 w-full max-w-2xl ${
-                      isSelected
-                        ? "bg-green-500 border-green-700 text-white font-extrabold"
-                        : "bg-white border-gray-300 hover:bg-green-50"
+                    className={`w-full max-w-xs py-4 px-8 text-[20px] font-bold rounded-full shadow transition-all duration-200 border-2 ${
+                      isSelected ? "bg-[#f4a261] text-white border-[#f4a261]" : "bg-white border-gray-300 text-gray-700 hover:bg-[#ffe3c3]"
                     }`}
                   >
                     {q["option" + opt]}
@@ -82,22 +85,22 @@ export default function Diagnosis() {
           </div>
         ))}
 
-        <div className="flex justify-center mt-8">
-          {isLastPage ? (
+        <div className="flex justify-center mt-6">
+          {startIndex + QUESTIONS_PER_PAGE >= questions.length ? (
             <button
               onClick={() => {
                 const type = calculateType(answers);
                 const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
                 router.push(resultUrl);
               }}
-              className="bg-green-600 hover:bg-green-700 text-white text-[40px] font-bold py-5 px-12 rounded-full shadow-lg"
+              className="bg-[#f4a261] hover:bg-[#e57d23] text-white text-xl font-semibold py-4 px-10 rounded-full shadow"
             >
               診断結果を見る
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className="bg-green-600 hover:bg-green-700 text-white text-[40px] font-bold py-5 px-12 rounded-full shadow-md"
+              className="bg-[#f4a261] hover:bg-[#e57d23] text-white text-xl font-semibold py-4 px-10 rounded-full shadow"
             >
               次へ
             </button>
