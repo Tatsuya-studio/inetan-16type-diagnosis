@@ -91,11 +91,9 @@ export default function Diagnosis() {
                   <button
                     key={opt}
                     onClick={() => handleAnswer(idx, opt)}
-                    className={`
-                      py-2 px-4 rounded-lg border text-left transition
-                      \${isSelected ? "bg-green-100 border-green-500 font-bold" : "bg-white border-gray-300"}
-                      hover:bg-green-50
-                    \`}
+                    className={`py-2 px-4 rounded-lg border text-left transition hover:bg-green-50 ${
+                      isSelected ? "bg-green-100 border-green-500 font-bold" : "bg-white border-gray-300"
+                    }`}
                   >
                     {isSelected && <span className="mr-2">✅</span>}
                     {q["option" + opt]}
