@@ -104,15 +104,24 @@ export default function Diagnosis() {
           </div>
         ))}
 
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={handleNext}
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl"
-          >
-            {startIndex + QUESTIONS_PER_PAGE >= questions.length ? "診断結果を見る" : "次へ"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+        <<div className="flex justify-end mt-6">
+  {startIndex + QUESTIONS_PER_PAGE >= questions.length ? (
+    <button
+      onClick={() => {
+        const type = calculateType(answers);
+        const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
+        router.push(resultUrl);
+      }}
+      className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl"
+    >
+      診断結果を見る
+    </button>
+  ) : (
+    <button
+      onClick={handleNext}
+      className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl"
+    >
+      次へ
+    </button>
+  )}
+</div>
