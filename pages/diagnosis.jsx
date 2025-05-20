@@ -101,6 +101,14 @@ export default function Diagnosis() {
             {startIndex + QUESTIONS_PER_PAGE >= questions.length ? "診断結果を見る" : "次へ"}
           </button>
         </div>
+        <div className="flex justify-center mt-4">
+  <a
+    href="https://inunekotype.jp/"
+    className="text-sm text-blue-500 underline hover:text-blue-700"
+  >
+    診断を最初からやり直す
+  </a>
+</div>
       </div>
     </div>
   );
