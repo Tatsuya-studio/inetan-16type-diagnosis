@@ -7,22 +7,23 @@ const QUESTIONS_PER_PAGE = 4;
 export default function Diagnosis() {
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleAnswer = (questionIndex, value) => {
     const updatedAnswers = [...answers];
     updatedAnswers[page * QUESTIONS_PER_PAGE + questionIndex] = value;
     setAnswers(updatedAnswers);
+    setError("");
   };
 
   const handleNext = () => {
-    if ((page + 1) * QUESTIONS_PER_PAGE >= questions.length) {
-      const type = calculateType(answers);
-      const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
-      router.push(resultUrl);
-    } else {
-      setPage(page + 1);
+    const unanswered = currentQuestions.some((_, idx) => !answers[startIndex + idx]);
+    if (unanswered) {
+      setError("すべての質問に回答してください。");
+      return;
     }
+    setPage(page + 1);
   };
 
   const calculateType = (answers) => {
@@ -50,7 +51,7 @@ export default function Diagnosis() {
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#fffaf3] to-[#fcefe4] text-gray-800 font-sans">
       <div className="w-full max-w-xl">
         <div className="mb-6">
-          <div className="text-sm text-gray-500 mb-2">
+          <div className="text-xl text-gray-700 font-semibold mb-2">
             <div className="mb-1">進捗 {progress}%</div>
             <div>{startIndex + 1} / {questions.length} 問</div>
           </div>
@@ -63,7 +64,7 @@ export default function Diagnosis() {
         </div>
 
         {currentQuestions.map((q, idx) => (
-          <div key={q.id} className="mb-8 px-6 py-6 bg-white rounded-2xl shadow-md">
+          <div key={q.id} className="mb-8 px-6 py-6 bg-white border-2 border-[#e57d23] rounded-2xl shadow-md">
             <div className="text-2xl mb-2">🐾 Q{startIndex + idx + 1}</div>
             <p className="text-xl font-semibold mb-4">{q.question}</p>
             <div className="flex flex-col items-center gap-4">
@@ -85,10 +86,17 @@ export default function Diagnosis() {
           </div>
         ))}
 
+        {error && <div className="text-red-500 font-semibold mb-4">{error}</div>}
+
         <div className="flex justify-center mt-6">
           {startIndex + QUESTIONS_PER_PAGE >= questions.length ? (
             <button
               onClick={() => {
+                const unanswered = currentQuestions.some((_, idx) => !answers[startIndex + idx]);
+                if (unanswered) {
+                  setError("すべての質問に回答してください。");
+                  return;
+                }
                 const type = calculateType(answers);
                 const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
                 router.push(resultUrl);
