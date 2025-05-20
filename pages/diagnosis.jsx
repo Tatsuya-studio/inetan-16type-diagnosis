@@ -42,43 +42,42 @@ export default function Diagnosis() {
   const isLastPage = startIndex + QUESTIONS_PER_PAGE >= questions.length;
 
   return (
-    <div className="min-h-screen bg-white text-[#444] font-sans flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-2xl">
+    <div className="min-h-screen bg-white text-[#444] font-sans flex flex-col items-center justify-center px-2 py-4">
+      <div className="w-full max-w-3xl text-center">
         <div className="mb-6">
-          <div className="flex justify-between mb-2 text-sm text-gray-500">
+          <div className="flex justify-between mb-2 text-lg text-gray-500">
             <span>進捗 {progress}%</span>
             <span>
               {page + 1} / {Math.ceil(questions.length / QUESTIONS_PER_PAGE)} ページ
             </span>
           </div>
-          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-2 bg-green-500 transition-all duration-500 ease-in-out"
+              className="h-4 bg-green-500 transition-all duration-500 ease-in-out"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
         {currentQuestions.map((q, idx) => (
-          <div key={q.id} className="mb-6 p-5 bg-gray-50 rounded-xl shadow-md">
-            <p className="text-sm text-green-600 font-semibold mb-1">
+          <div key={q.id} className="mb-6 p-6 bg-gray-50 rounded-xl shadow-md">
+            <p className="text-lg text-green-600 font-bold mb-2">
               🐾 Q{startIndex + idx + 1}
             </p>
-            <p className="font-bold mb-3 text-base">{q.question}</p>
-            <div className="flex flex-col gap-3">
+            <p className="font-bold text-xl mb-4">{q.question}</p>
+            <div className="flex flex-col items-center gap-4">
               {["A", "B", "C"].map((opt) => {
                 const isSelected = answers[startIndex + idx] === opt;
                 return (
                   <button
                     key={opt}
                     onClick={() => handleAnswer(idx, opt)}
-                    className={`py-3 px-4 text-left rounded-lg border transition-all duration-200 hover:bg-green-50 ${
+                    className={`text-xl py-5 px-10 rounded-full border-4 transition-all duration-200 w-full max-w-xl ${
                       isSelected
-                        ? "bg-green-100 border-green-500 font-bold shadow-sm"
-                        : "bg-white border-gray-300"
+                        ? "bg-green-500 border-green-700 text-white font-extrabold"
+                        : "bg-white border-gray-300 hover:bg-green-50"
                     }`}
                   >
-                    {isSelected && <span className="mr-2">✅</span>}
                     {q["option" + opt]}
                   </button>
                 );
@@ -87,7 +86,7 @@ export default function Diagnosis() {
           </div>
         ))}
 
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-center mt-8">
           {isLastPage ? (
             <button
               onClick={() => {
@@ -95,14 +94,14 @@ export default function Diagnosis() {
                 const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
                 router.push(resultUrl);
               }}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg"
+              className="bg-green-600 hover:bg-green-700 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg"
             >
               診断結果を見る
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-md"
+              className="bg-green-600 hover:bg-green-700 text-white text-xl font-bold py-4 px-10 rounded-full shadow-md"
             >
               次へ
             </button>
