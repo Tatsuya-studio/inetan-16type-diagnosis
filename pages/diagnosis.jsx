@@ -42,39 +42,39 @@ export default function Diagnosis() {
   const isLastPage = startIndex + QUESTIONS_PER_PAGE >= questions.length;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white text-gray-800">
+    <div className="min-h-screen bg-white text-[#444] font-sans flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-2xl">
         <div className="mb-6">
           <div className="flex justify-between mb-2 text-sm text-gray-500">
             <span>進捗 {progress}%</span>
             <span>
-              {startIndex + 1} / {questions.length} 問
+              {page + 1} / {Math.ceil(questions.length / QUESTIONS_PER_PAGE)} ページ
             </span>
           </div>
-          <div className="w-full h-2 bg-gray-200 rounded-full">
+          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-2 bg-green-500 rounded-full transition-all"
+              className="h-2 bg-green-500 transition-all duration-500 ease-in-out"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
         {currentQuestions.map((q, idx) => (
-          <div key={q.id} className="mb-6 p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-sm text-gray-500 mb-1">
-              Q{startIndex + idx + 1}
+          <div key={q.id} className="mb-6 p-5 bg-gray-50 rounded-xl shadow-md">
+            <p className="text-sm text-green-600 font-semibold mb-1">
+              🐾 Q{startIndex + idx + 1}
             </p>
-            <p className="font-semibold mb-3">{q.question}</p>
-            <div className="flex flex-col gap-2">
+            <p className="font-bold mb-3 text-base">{q.question}</p>
+            <div className="flex flex-col gap-3">
               {["A", "B", "C"].map((opt) => {
                 const isSelected = answers[startIndex + idx] === opt;
                 return (
                   <button
                     key={opt}
                     onClick={() => handleAnswer(idx, opt)}
-                    className={`py-2 px-4 rounded-lg border text-left transition hover:bg-green-50 ${
+                    className={`py-3 px-4 text-left rounded-lg border transition-all duration-200 hover:bg-green-50 ${
                       isSelected
-                        ? "bg-green-100 border-green-500 font-bold"
+                        ? "bg-green-100 border-green-500 font-bold shadow-sm"
                         : "bg-white border-gray-300"
                     }`}
                   >
@@ -95,14 +95,14 @@ export default function Diagnosis() {
                 const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
                 router.push(resultUrl);
               }}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg"
             >
               診断結果を見る
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-md"
             >
               次へ
             </button>
