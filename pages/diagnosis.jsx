@@ -27,8 +27,9 @@ export default function Diagnosis() {
       router.push(resultUrl);
     } else {
       setPage(page + 1);
-    }
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" }); // ← これを追加
+  }
+};
 
   const calculateType = (answers) => {
     const axisCount = { EI: 0, SN: 0, TF: 0, JP: 0 };
