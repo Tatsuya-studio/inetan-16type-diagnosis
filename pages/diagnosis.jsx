@@ -4,6 +4,26 @@ import { questions } from "../data/questions";
 
 const QUESTIONS_PER_PAGE = 4;
 
+// タイプ別の本番URLマップ
+const RESULT_URL_MAP = {
+  INTJ: "https://inunekotype.jp/result-16type-intj-1/",
+  INTP: "https://inunekotype.jp/result-16type-intp-1/",
+  ENTJ: "https://inunekotype.jp/result-16type-entj-1/",
+  ENTP: "https://inunekotype.jp/result-16type-entp-1/",
+  INFJ: "https://inunekotype.jp/result-16type-infj-1/",
+  INFP: "https://inunekotype.jp/result-16type-infp-1/",
+  ENFJ: "https://inunekotype.jp/result-16type-enfj-1/",
+  ENFP: "https://inunekotype.jp/result-16type-enfp-1/",
+  ISTJ: "https://inunekotype.jp/result-16type-istj-1/",
+  ISFJ: "https://inunekotype.jp/result-16type-isfj-1/",
+  ESTJ: "https://inunekotype.jp/result-16type-estj-1/",
+  ESFJ: "https://inunekotype.jp/result-16type-esfj-1/",
+  ISTP: "https://inunekotype.jp/result-16type-istp-1/",
+  ISFP: "https://inunekotype.jp/result-16type-isfp-1/",
+  ESTP: "https://inunekotype.jp/result-16type-estp-1/",
+  ESFP: "https://inunekotype.jp/result-16type-esfp-1/",
+};
+
 export default function Diagnosis() {
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -21,15 +41,17 @@ export default function Diagnosis() {
       alert("すべての質問に回答してください。");
       return;
     }
+
     if ((page + 1) * QUESTIONS_PER_PAGE >= questions.length) {
-      const type = calculateType(answers);
-      const resultUrl = `https://inunekotype.jp/result-16type-test/?type=${type}`;
-      router.push(resultUrl);
+      const type = calculateType(answers); // MBTIタイプ文字列（例: "INTJ"）
+      const target = RESULT_URL_MAP[type];
+      const fallback = `/result-16type-test?type=${encodeURIComponent(type)}`;
+      router.push(target ?? fallback);
     } else {
       setPage(page + 1);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // ← これを追加
-  }
-};
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const calculateType = (answers) => {
     const axisCount = { EI: 0, SN: 0, TF: 0, JP: 0 };
@@ -68,30 +90,27 @@ export default function Diagnosis() {
           </div>
         </div>
 
-        {currentQuestions.map((q, idx) => {
-          const isSelected = answers[startIndex + idx];
-          return (
-            <div key={q.id} className="mb-8 px-6 py-6 bg-white border-2 border-[#e57d23] rounded-2xl shadow-md">
-              <div className="text-2xl mb-2">🐾 Q{startIndex + idx + 1}</div>
-              <p className="text-xl font-semibold mb-4">{q.question}</p>
-              <div className="flex flex-col items-center gap-4">
-                {["A", "B", "C"].map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => handleAnswer(idx, opt)}
-                    className={`w-full max-w-xs py-4 px-8 text-[20px] font-bold rounded-full shadow transition-all duration-200 border-2 ${
-                      answers[startIndex + idx] === opt
-                        ? "bg-[#f4a261] text-white border-[#f4a261]"
-                        : "bg-white border-gray-300 text-gray-700 hover:bg-[#ffe3c3]"
-                    }`}
-                  >
-                    {q["option" + opt]}
-                  </button>
-                ))}
-              </div>
+        {currentQuestions.map((q, idx) => (
+          <div key={q.id} className="mb-8 px-6 py-6 bg-white border-2 border-[#e57d23] rounded-2xl shadow-md">
+            <div className="text-2xl mb-2">🐾 Q{startIndex + idx + 1}</div>
+            <p className="text-xl font-semibold mb-4">{q.question}</p>
+            <div className="flex flex-col items-center gap-4">
+              {["A", "B", "C"].map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => handleAnswer(idx, opt)}
+                  className={`w-full max-w-xs py-4 px-8 text-[20px] font-bold rounded-full shadow transition-all duration-200 border-2 ${
+                    answers[startIndex + idx] === opt
+                      ? "bg-[#f4a261] text-white border-[#f4a261]"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-[#ffe3c3]"
+                  }`}
+                >
+                  {q["option" + opt]}
+                </button>
+              ))}
             </div>
-          );
-        })}
+          </div>
+        ))}
 
         <div className="flex justify-center mt-6">
           <button
@@ -101,14 +120,15 @@ export default function Diagnosis() {
             {startIndex + QUESTIONS_PER_PAGE >= questions.length ? "診断結果を見る" : "次へ"}
           </button>
         </div>
+
         <div className="flex justify-center mt-4">
-  <a
-    href="https://inunekotype.jp/"
-    className="text-sm text-blue-500 underline hover:text-blue-700"
-  >
-    診断を最初からやり直す
-  </a>
-</div>
+          <a
+            href="https://inunekotype.jp/"
+            className="text-sm text-blue-500 underline hover:text-blue-700"
+          >
+            診断を最初からやり直す
+          </a>
+        </div>
       </div>
     </div>
   );
