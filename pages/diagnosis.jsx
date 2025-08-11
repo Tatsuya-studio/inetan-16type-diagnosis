@@ -6,22 +6,22 @@ const QUESTIONS_PER_PAGE = 4;
 
 // タイプ別の本番URLマップ
 const RESULT_URL_MAP = {
-  INTJ: "https://inunekotype.jp/result-16type-intj-1/",
-  INTP: "https://inunekotype.jp/result-16type-intp-1/",
-  ENTJ: "https://inunekotype.jp/result-16type-entj-1/",
-  ENTP: "https://inunekotype.jp/result-16type-entp-1/",
-  INFJ: "https://inunekotype.jp/result-16type-infj-1/",
-  INFP: "https://inunekotype.jp/result-16type-infp-1/",
-  ENFJ: "https://inunekotype.jp/result-16type-enfj-1/",
-  ENFP: "https://inunekotype.jp/result-16type-enfp-1/",
-  ISTJ: "https://inunekotype.jp/result-16type-istj-1/",
-  ISFJ: "https://inunekotype.jp/result-16type-isfj-1/",
-  ESTJ: "https://inunekotype.jp/result-16type-estj-1/",
-  ESFJ: "https://inunekotype.jp/result-16type-esfj-1/",
-  ISTP: "https://inunekotype.jp/result-16type-istp-1/",
-  ISFP: "https://inunekotype.jp/result-16type-isfp-1/",
-  ESTP: "https://inunekotype.jp/result-16type-estp-1/",
-  ESFP: "https://inunekotype.jp/result-16type-esfp-1/",
+  INTJ: "https://inunekotype.jp/result-16type-intj-01/",
+  INTP: "https://inunekotype.jp/result-16type-intp-01/",
+  ENTJ: "https://inunekotype.jp/result-16type-entj-01/",
+  ENTP: "https://inunekotype.jp/result-16type-entp-01/",
+  INFJ: "https://inunekotype.jp/result-16type-infj-01/",
+  INFP: "https://inunekotype.jp/result-16type-infp-01/",
+  ENFJ: "https://inunekotype.jp/result-16type-enfj-01/",
+  ENFP: "https://inunekotype.jp/result-16type-enfp-01/",
+  ISTJ: "https://inunekotype.jp/result-16type-istj-01/",
+  ISFJ: "https://inunekotype.jp/result-16type-isfj-01/",
+  ESTJ: "https://inunekotype.jp/result-16type-estj-01/",
+  ESFJ: "https://inunekotype.jp/result-16type-esfj-01/",
+  ISTP: "https://inunekotype.jp/result-16type-istp-01/",
+  ISFP: "https://inunekotype.jp/result-16type-isfp-01/",
+  ESTP: "https://inunekotype.jp/result-16type-estp-01/",
+  ESFP: "https://inunekotype.jp/result-16type-esfp-01/",
 };
 
 export default function Diagnosis() {
