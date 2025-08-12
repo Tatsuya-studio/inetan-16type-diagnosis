@@ -4,26 +4,6 @@ import { questions } from "../data/questions";
 
 const QUESTIONS_PER_PAGE = 4;
 
-// タイプ別の本番URLマップ
-const RESULT_URL_MAP = {
-  INTJ: "https://inunekotype.jp/result-16type-intj-01/",
-  INTP: "https://inunekotype.jp/result-16type-intp-01/",
-  ENTJ: "https://inunekotype.jp/result-16type-entj-01/",
-  ENTP: "https://inunekotype.jp/result-16type-entp-01/",
-  INFJ: "https://inunekotype.jp/result-16type-infj-01/",
-  INFP: "https://inunekotype.jp/result-16type-infp-01/",
-  ENFJ: "https://inunekotype.jp/result-16type-enfj-01/",
-  ENFP: "https://inunekotype.jp/result-16type-enfp-01/",
-  ISTJ: "https://inunekotype.jp/result-16type-istj-01/",
-  ISFJ: "https://inunekotype.jp/result-16type-isfj-01/",
-  ESTJ: "https://inunekotype.jp/result-16type-estj-01/",
-  ESFJ: "https://inunekotype.jp/result-16type-esfj-01/",
-  ISTP: "https://inunekotype.jp/result-16type-istp-01/",
-  ISFP: "https://inunekotype.jp/result-16type-isfp-01/",
-  ESTP: "https://inunekotype.jp/result-16type-estp-01/",
-  ESFP: "https://inunekotype.jp/result-16type-esfp-01/",
-};
-
 export default function Diagnosis() {
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -36,30 +16,50 @@ export default function Diagnosis() {
   };
 
   const handleNext = () => {
+    const startIndex = page * QUESTIONS_PER_PAGE;
+    const currentQuestions = questions.slice(startIndex, startIndex + QUESTIONS_PER_PAGE);
+
     const unanswered = currentQuestions.some((_, idx) => !answers[startIndex + idx]);
     if (unanswered) {
       alert("すべての質問に回答してください。");
       return;
     }
 
+    // 最終ページ：本番URLへ直行
     if ((page + 1) * QUESTIONS_PER_PAGE >= questions.length) {
-      const type = calculateType(answers); // MBTIタイプ文字列（例: "INTJ"）
-      const target = RESULT_URL_MAP[type];
-      const fallback = `/result-16type-test?type=${encodeURIComponent(type)}`;
-      router.push(target ?? fallback);
-    } else {
-      setPage(page + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const rawType = calculateType(answers);
+      const type = String(rawType).toUpperCase().trim();
+
+      // 16タイプのバリデーション（想定外を弾く）
+      const validTypes = new Set([
+        "INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP",
+        "ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"
+      ]);
+
+      if (validTypes.has(type)) {
+        const target = `https://inunekotype.jp/result-16type-${type.toLowerCase()}-1/`;
+        // 外部ドメインは window.location のほうが確実
+        window.location.assign(target);
+      } else {
+        // 念のためのフォールバック
+        router.push(`/result-16type-test?type=${encodeURIComponent(type)}`);
+      }
+      return;
     }
+
+    // 次ページへ
+    setPage(page + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const calculateType = (answers) => {
     const axisCount = { EI: 0, SN: 0, TF: 0, JP: 0 };
     answers.forEach((answer, index) => {
       const q = questions[index];
-      if (q.axis && answer) {
+      if (q?.axis && answer) {
         if (answer === "A") axisCount[q.axis]++;
         if (answer === "B") axisCount[q.axis]--;
+        // "C" は中立（加点なし）
       }
     });
     return (
