@@ -76,22 +76,19 @@ export default function Diagnosis() {
 
 return (
   <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#fffaf3] to-[#fcefe4] text-gray-800 font-sans">
-    <div className="mb-4 text-xs text-gray-500">
-      build: 2025-08-12T23:59 (debug stamp)
-    </div>
     <div className="w-full max-w-xl">
       <div className="mb-6">
-          <div className="text-lg text-gray-600 font-medium mb-2">
-            <div className="mb-1">進捗 {progress}%</div>
-            <div>{startIndex + 1} / {questions.length} 問</div>
-          </div>
-          <div className="w-full h-3 bg-gray-200 rounded-full">
-            <div
-              className="h-3 bg-[#f4a261] rounded-full transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+        <div className="text-lg text-gray-600 font-medium mb-2">
+          <div className="mb-1">進捗 {progress}%</div>
+          <div>{startIndex + 1} / {questions.length} 問</div>
         </div>
+        <div className="w-full h-3 bg-gray-200 rounded-full">
+          <div
+            className="h-3 bg-[#f4a261] rounded-full transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
 
         {currentQuestions.map((q, idx) => (
           <div key={q.id} className="mb-8 px-6 py-6 bg-white border-2 border-[#e57d23] rounded-2xl shadow-md">
