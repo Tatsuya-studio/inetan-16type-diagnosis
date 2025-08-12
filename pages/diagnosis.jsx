@@ -37,7 +37,7 @@ export default function Diagnosis() {
       ]);
 
       if (validTypes.has(type)) {
-        const target = `https://inunekotype.jp/result-16type-${type.toLowerCase()}-1/`;
+        const target = `https://inunekotype.jp/result-16type-${type.toLowerCase()}-01/`;
         // 外部ドメインは window.location のほうが確実
         window.location.assign(target);
       } else {
