@@ -74,10 +74,13 @@ export default function Diagnosis() {
   const currentQuestions = questions.slice(startIndex, startIndex + QUESTIONS_PER_PAGE);
   const progress = Math.round((startIndex / questions.length) * 100);
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#fffaf3] to-[#fcefe4] text-gray-800 font-sans">
-      <div className="w-full max-w-xl">
-        <div className="mb-6">
+return (
+  <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#fffaf3] to-[#fcefe4] text-gray-800 font-sans">
+    <div className="mb-4 text-xs text-gray-500">
+      build: 2025-08-12T23:59 (debug stamp)
+    </div>
+    <div className="w-full max-w-xl">
+      <div className="mb-6">
           <div className="text-lg text-gray-600 font-medium mb-2">
             <div className="mb-1">進捗 {progress}%</div>
             <div>{startIndex + 1} / {questions.length} 問</div>
