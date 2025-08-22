@@ -1,10 +1,17 @@
 // pages/_app.js
-import '../styles/globals.css';            // ✅ Tailwind を読み込む
+import '../styles/globals.css';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+
+// ✅ どこからでも呼べる安全ラッパー
+export function gtagEvent(name, params = {}) {
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function' && GA_ID) {
+    window.gtag('event', name, params);
+  }
+}
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -16,7 +23,7 @@ export default function MyApp({ Component, pageProps }) {
         window.gtag('config', GA_ID, { page_path: url });
       }
     };
-    // 初回ページビュー
+    // 初回
     handleRouteChange(window.location.pathname + window.location.search);
     // 以降の遷移
     router.events.on('routeChangeComplete', handleRouteChange);
@@ -25,7 +32,6 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {/* GA4 スクリプト */}
       {GA_ID && (
         <>
           <Script
