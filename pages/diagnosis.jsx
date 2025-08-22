@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { questions } from "../data/questions";
-import { gtagEvent } from "./_app"; // ✅ 追加（相対パスは pages 直下なので "./_app"）
+import { gtagEvent } from "../lib/ga";
 
 const QUESTIONS_PER_PAGE = 4;
 
@@ -18,7 +18,7 @@ export default function Diagnosis() {
     }
   }, [page]);
 
-  // ✅ 初回表示時：診断開始イベント
+  // 初回表示時：診断開始イベント
   useEffect(() => {
     gtagEvent("diagnosis_start", { value: 1 });
   }, []);
@@ -44,18 +44,18 @@ export default function Diagnosis() {
       const rawType = calculateType(answers);
       const type = String(rawType).toUpperCase().trim();
 
+      // タイプ別イベント
+      gtagEvent("result_type", { type });
+
       const validTypes = new Set([
         "INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP",
         "ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"
       ]);
 
-      // ✅ タイプ別イベント
-      gtagEvent("result_type", { type });
-
       if (validTypes.has(type)) {
         const target = `https://inunekotype.jp/result-16type-${type.toLowerCase()}-01/`;
 
-        // ✅ 完了イベントを送ってから遷移（beacon で送信落ちを防ぐ）
+        // 完了イベント → 送信後に遷移（beaconで落ちにくく）
         if (typeof window !== "undefined" && typeof window.gtag === "function") {
           window.gtag("event", "diagnosis_complete", {
             value: 1,
@@ -65,13 +65,12 @@ export default function Diagnosis() {
               window.location.assign(target);
             },
           });
-          // 念のためのタイムアウト（callbackが呼ばれない極稀ケース）
+          // 念のための保険（400msで強制遷移）
           setTimeout(() => window.location.assign(target), 400);
         } else {
           window.location.assign(target);
         }
       } else {
-        // フォールバック
         gtagEvent("diagnosis_complete", { value: 1, type: "invalid" });
         router.push(`/result-16type-test?type=${encodeURIComponent(type)}`);
       }
@@ -89,6 +88,7 @@ export default function Diagnosis() {
       if (q?.axis && answer) {
         if (answer === "A") axisCount[q.axis]++;
         if (answer === "B") axisCount[q.axis]--;
+        // "C" は中立（加点なし）
       }
     });
     return (
@@ -98,9 +98,6 @@ export default function Diagnosis() {
       (axisCount.JP >= 0 ? "J" : "P")
     );
   };
-
-  // …（UI部分はそのまま）
-}
 
   const startIndex = page * QUESTIONS_PER_PAGE;
   const currentQuestions = questions.slice(startIndex, startIndex + QUESTIONS_PER_PAGE);
@@ -115,7 +112,6 @@ export default function Diagnosis() {
             <div className="mb-1">進捗 {progress}%</div>
             <div>{startIndex + 1} / {questions.length} 問</div>
           </div>
-          {/* ライトグリーンの進捗バー */}
           <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
             <div
               className="h-3 rounded-full transition-all"
