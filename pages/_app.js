@@ -3,26 +3,14 @@ import '../styles/globals.css';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-
-// ✅ どこからでも呼べる安全ラッパー
-export function gtagEvent(name, params = {}) {
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function' && GA_ID) {
-    window.gtag('event', name, params);
-  }
-}
+import { GA_ID, gtagPageview } from '../lib/ga';
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
   useEffect(() => {
     if (!GA_ID) return;
-    const handleRouteChange = (url) => {
-      if (typeof window.gtag === 'function') {
-        window.gtag('config', GA_ID, { page_path: url });
-      }
-    };
+    const handleRouteChange = (url) => gtagPageview(url);
     // 初回
     handleRouteChange(window.location.pathname + window.location.search);
     // 以降の遷移
