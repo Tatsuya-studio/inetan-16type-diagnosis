@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { questions } from "../data/questions";
+import { gtagEvent } from "./_app"; // ✅ 追加（相対パスは pages 直下なので "./_app"）
 
 const QUESTIONS_PER_PAGE = 4;
 
@@ -16,6 +17,11 @@ export default function Diagnosis() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [page]);
+
+  // ✅ 初回表示時：診断開始イベント
+  useEffect(() => {
+    gtagEvent("diagnosis_start", { value: 1 });
+  }, []);
 
   const handleAnswer = (questionIndex, value) => {
     const updated = [...answers];
@@ -43,10 +49,30 @@ export default function Diagnosis() {
         "ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"
       ]);
 
+      // ✅ タイプ別イベント
+      gtagEvent("result_type", { type });
+
       if (validTypes.has(type)) {
         const target = `https://inunekotype.jp/result-16type-${type.toLowerCase()}-01/`;
-        window.location.assign(target); // 外部ドメインはこれが確実
+
+        // ✅ 完了イベントを送ってから遷移（beacon で送信落ちを防ぐ）
+        if (typeof window !== "undefined" && typeof window.gtag === "function") {
+          window.gtag("event", "diagnosis_complete", {
+            value: 1,
+            type,
+            transport_type: "beacon",
+            event_callback: function () {
+              window.location.assign(target);
+            },
+          });
+          // 念のためのタイムアウト（callbackが呼ばれない極稀ケース）
+          setTimeout(() => window.location.assign(target), 400);
+        } else {
+          window.location.assign(target);
+        }
       } else {
+        // フォールバック
+        gtagEvent("diagnosis_complete", { value: 1, type: "invalid" });
         router.push(`/result-16type-test?type=${encodeURIComponent(type)}`);
       }
       return;
@@ -63,7 +89,6 @@ export default function Diagnosis() {
       if (q?.axis && answer) {
         if (answer === "A") axisCount[q.axis]++;
         if (answer === "B") axisCount[q.axis]--;
-        // "C" は中立（加点なし）
       }
     });
     return (
@@ -73,6 +98,9 @@ export default function Diagnosis() {
       (axisCount.JP >= 0 ? "J" : "P")
     );
   };
+
+  // …（UI部分はそのまま）
+}
 
   const startIndex = page * QUESTIONS_PER_PAGE;
   const currentQuestions = questions.slice(startIndex, startIndex + QUESTIONS_PER_PAGE);
