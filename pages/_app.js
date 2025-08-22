@@ -1,7 +1,8 @@
 // pages/_app.js
-import Script from "next/script";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import '../styles/globals.css';            // ✅ Tailwind を読み込む
+import Script from 'next/script';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
@@ -11,19 +12,20 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (!GA_ID) return;
     const handleRouteChange = (url) => {
-      window.gtag("config", GA_ID, {
-        page_path: url,
-      });
+      if (typeof window.gtag === 'function') {
+        window.gtag('config', GA_ID, { page_path: url });
+      }
     };
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
+    // 初回ページビュー
+    handleRouteChange(window.location.pathname + window.location.search);
+    // 以降の遷移
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
 
   return (
     <>
-      {/* GA4 スクリプト読み込み */}
+      {/* GA4 スクリプト */}
       {GA_ID && (
         <>
           <Script
