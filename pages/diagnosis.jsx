@@ -9,6 +9,13 @@ export default function Diagnosis() {
   const [answers, setAnswers] = useState([]);
   const router = useRouter();
 
+  // ✅ ページ番号が変わるたびに必ずトップへ（全ページで効く）
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [page]);
+
   const handleAnswer = (questionIndex, value) => {
     const updatedAnswers = [...answers];
     updatedAnswers[page * QUESTIONS_PER_PAGE + questionIndex] = value;
@@ -82,13 +89,17 @@ return (
           <div className="mb-1">進捗 {progress}%</div>
           <div>{startIndex + 1} / {questions.length} 問</div>
         </div>
-        <div className="w-full h-3 bg-gray-200 rounded-full">
-          <div
-            className="h-3 bg-[#f4a261] rounded-full transition-all"
-            style={{ width: `${progress}%` }}
-          />
+        {/* ✅ ライトグリーンの進捗バー */}
+          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-3 rounded-full transition-all"
+              style={{
+                width: `${progress}%`,
+                backgroundColor: "#86efac" // Tailwind green-300
+              }}
+            />
+          </div>
         </div>
-      </div>
 
         {currentQuestions.map((q, idx) => (
           <div key={q.id} className="mb-8 px-6 py-6 bg-white border-2 border-[#e57d23] rounded-2xl shadow-md">
