@@ -1,8 +1,7 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { questions } from "../data/questions";
 import { gtagEvent } from "../lib/ga";
-import { useState, useRef } from "react";
 
 export default function Diagnosis() {
   const router = useRouter();
@@ -16,7 +15,7 @@ export default function Diagnosis() {
     if (typeof window !== "undefined") window.scrollTo({ top: 0 });
   }, []);
 
-  // 進捗（回答済み数ベースで更新）
+  // 回答済み数で進捗更新（回答ごとに動く）
   const answeredCount = useMemo(
     () => answers.filter((v) => v === "A" || v === "B" || v === "C").length,
     [answers]
@@ -37,18 +36,13 @@ export default function Diagnosis() {
     const el =
       questionRefs.current[idx] ||
       (typeof document !== "undefined" && document.getElementById(`q-${idx}`));
-    if (el && typeof el.scrollIntoView === "function") {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    if (el?.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleSubmit = () => {
     if (!allAnswered) {
-      // 未回答の最初の設問へスクロール
       const firstUnanswered = answers.findIndex((v) => v == null);
-      if (firstUnanswered >= 0) {
-        scrollToQuestion(firstUnanswered);
-      }
+      if (firstUnanswered >= 0) scrollToQuestion(firstUnanswered);
       return;
     }
     if (submitting) return;
@@ -56,7 +50,6 @@ export default function Diagnosis() {
 
     const rawType = calculateType(answers);
     const type = String(rawType).toUpperCase().trim();
-
     gtagEvent("result_type", { type });
 
     const validTypes = new Set([
@@ -71,9 +64,7 @@ export default function Diagnosis() {
           value: 1,
           type,
           transport_type: "beacon",
-          event_callback: function () {
-            window.location.assign(target);
-          },
+          event_callback: function () { window.location.assign(target); },
         });
         setTimeout(() => window.location.assign(target), 400);
       } else {
@@ -115,13 +106,13 @@ export default function Diagnosis() {
               <div>{answeredCount} / {total} 問</div>
             </div>
             <div className="text-xs sm:text-sm text-gray-500">
-              タップで選択（変更可）
+              タップで選択（あとから変更可）
             </div>
           </div>
           <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
             <div
               className="h-3 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%`, backgroundColor: "#86efac" }} // green-300
+              style={{ width: `${progress}%`, backgroundColor: "#86efac" }}
             />
           </div>
         </div>
@@ -131,18 +122,21 @@ export default function Diagnosis() {
           {questions.map((q, idx) => {
             const sel = answers[idx];
             const isUnanswered = sel == null;
-            const showDivider = (idx + 1) % 5 === 0 && idx !== total - 1;
+            const showLightDivider = (idx + 1) % 5 === 0 && idx !== total - 1; // 軽い区切りのみ
 
             return (
-              <div key={q.id} id={`q-${idx}`}
-                   ref={(el) => (questionRefs.current[idx] = el)}
-                   className={`px-5 sm:px-6 py-5 sm:py-6 bg-white border-2 rounded-2xl shadow-md ${
-                     isUnanswered ? "border-[#f0c9a6]" : "border-[#e57d23]"
-                   }`}>
-                <div className="flex items-center justify-between mb-2">
+              <div
+                key={q.id}
+                id={`q-${idx}`}
+                ref={(el) => (questionRefs.current[idx] = el)}
+                className={`px-5 sm:px-6 py-5 sm:py-6 bg-white border-2 rounded-2xl shadow-md ${
+                  isUnanswered ? "border-[#f0c9a6]" : "border-[#e57d23]"
+                }`}
+              >
+                <div className="mb-2">
                   <div className="text-xl sm:text-2xl">🐾 Q{idx + 1}</div>
-                  <div className="text-xs text-gray-500">{q.axis || ""}</div>
                 </div>
+
                 <p className="text-lg sm:text-xl font-semibold mb-4 leading-relaxed">
                   {q.question}
                 </p>
@@ -163,10 +157,10 @@ export default function Diagnosis() {
                   ))}
                 </div>
 
-                {showDivider && (
+                {showLightDivider && (
                   <div className="mt-5 sm:mt-6">
-                    <div className="h-0.5 w-full bg-gray-200 rounded-full" />
-                    <div className="text-center text-xs text-gray-400 mt-2">
+                    <div className="h-0.5 w-full bg-gray-100 rounded-full" />
+                    <div className="text-center text-[11px] sm:text-xs text-gray-400 mt-2">
                       ここまでで {idx + 1} / {total} 問
                     </div>
                   </div>
