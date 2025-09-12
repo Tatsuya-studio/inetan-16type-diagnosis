@@ -98,24 +98,36 @@ export default function Diagnosis() {
     <div className="min-h-screen flex flex-col items-center p-4 sm:p-6 bg-gradient-to-b from-[#fffaf3] to-[#fcefe4] text-gray-800 font-sans">
       <div className="w-full max-w-3xl">
 
-        {/* ヘッダー / 進捗 */}
-        <div className="mb-5 sm:mb-6">
-          <div className="flex items-end justify-between mb-2">
-            <div className="text-base sm:text-lg text-gray-600 font-medium">
-              <div className="mb-1">進捗 {progress}%</div>
-              <div>{answeredCount} / {total} 問</div>
-            </div>
-            <div className="text-xs sm:text-sm text-gray-500">
-              タップで選択（あとから変更可）
-            </div>
-          </div>
-          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="h-3 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%`, backgroundColor: "#86efac" }}
-            />
-          </div>
+        {/* ヘッダー / 進捗（スクロール固定） */}
+<div
+  className="sticky top-0 z-30"
+  style={{ paddingTop: "env(safe-area-inset-top)" }}
+>
+  <div className="backdrop-blur bg-[rgba(255,250,243,0.85)] border-b border-[rgba(229,125,35,0.15)] shadow-sm">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-2.5">
+      <div className="flex items-end justify-between mb-1">
+        <div className="text-base sm:text-lg text-gray-600 font-medium">
+          <div className="mb-0.5">進捗 {progress}%</div>
+          <div>{answeredCount} / {total} 問</div>
         </div>
+        <div className="text-[11px] sm:text-xs text-gray-500">
+          タップで選択（あとから変更可）
+        </div>
+      </div>
+
+      <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-3 rounded-full transition-all duration-300"
+          style={{ width: `${progress}%`, backgroundColor: "#86efac" }}
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          role="progressbar"
+        />
+      </div>
+    </div>
+  </div>
+</div>
 
         {/* 質問リスト（全問1ページ表示） */}
         <div className="space-y-5 sm:space-y-6">
